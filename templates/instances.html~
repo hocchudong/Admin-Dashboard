@@ -1,0 +1,98 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    instances
+{% endblock %}
+
+{% block active_instances %}
+    active
+{% endblock %}
+
+{% block page-header %}
+    Instances <small>Actions</small>
+{% endblock %}
+
+{% block dir-header %}
+    <li class="active">
+        <i class="fa fa-users"></i> Instances
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+        </div>
+        <div class="col-lg-2">
+            <input class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure?')" value="Start  All  Tenants" name="reboot_instance"></input>
+        </div>
+        <div class="col-lg-2">
+            <input class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to reboot all instances in system?')" value="Reboot  All  Instance" name="reboot_instance"></input>
+        </div>
+        <div class="col-lg-2">
+            <input class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to shutdown all instances in system?')" value="Shutdown  All  Instances" name="reboot_instance"></input>
+        </div>
+    </div>
+    <hr>
+    {%for i,j,k in kq %}
+    <div class="row">
+        <div class="col-lg-6">
+            <h3 style="color: navy"><b>{{ i }}</b></h4>
+        </div>
+        <div class="col-lg-6">
+            <input class="btn-sm pull-right" type="submit" onclick="return confirm('Are you sure to reboot all instances in {{ i }} tenant?')" value="Reboot Tenant" name="reboot_instance"></input>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="table-responsive">              
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr class="active">
+                        {% for x in hd %}
+                            <th>{{ x }}</th>
+                        {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for x in j %}
+                            <tr role='row'>
+                                {% for y in x %}
+                                <td>{{ y }}</td>
+                                {% endfor %}
+                                <td>
+                                    <form action="http://127.0.0.1:8000/instances" method="POST">
+                                    {% csrf_token %}
+                                        <button  type="submit" class=" btn-xs" title="start">
+                                            <span class="glyphicon glyphicon-play"></span>
+                                        </button>
+                                        <button  type="button" class=" btn-xs" title="pause">
+                                            <span class="glyphicon glyphicon-pause"></span>
+                                        </button>
+                                        <button  type="submit" class=" btn-xs" title="reboot" name = 'reboot' value=[{{ k }},{{ j.2 }}]>
+                                            <span class="glyphicon glyphicon-repeat"></span>
+                                        </button>
+                                        <button  type="button" class=" btn-xs" title="shutdown">
+                                            <span class="glyphicon glyphicon-off"></span>
+                                        </button>
+                                        <button  type="button" class=" btn-xs" title="detail">
+                                            <span class="glyphicon glyphicon-list-alt"></span>
+                                        </button>                                        
+                                        <button  type="button" class="btn-xs" title="console">
+                                            <span class="glyphicon glyphicon-credit-card"></span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <hr>
+    {% endfor %}
+        
+
+        
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Instances
+{% endblock %}
+
+{% block active_instances %}
+    active
+{% endblock %}
+
+{% block page-header %}
+    Instances <small>Actions</small>
+{% endblock %}
+
+{% block dir-header %}
+    <li class="active">
+        <i class="fa fa-users"></i> Instances
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-6">
+        </div>
+        <div class="col-lg-2">
+            <form action="/instances" method="POST">{% csrf_token %}
+                <button class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to start all instances in system?')"  name="start_all">
+                    Start  All  Tenants
+                </button>
+            </form>
+        </div>
+        <div class="col-lg-2">
+            <form action="/instances" method="POST">{% csrf_token %}
+                <button class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to reboot all instances in system?')" name="reboot_all">
+                    Reboot  All  Instance
+                </button>
+            </form>
+        </div>
+        <div class="col-lg-2">
+            <form action="/instances" method="POST">{% csrf_token %}
+                <button class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to shutdown all instances in system?')" name="shutdown_all">
+                    Shutdown  All  Instances
+                </button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    {% for name, infos, id_tenant in kq %}  
+    <div class="row">
+        <div class="col-lg-6">
+            <a data-toggle="collapse"  href="#{{ id_tenant }}">
+                <h3><b>{{ name }}</b></h3>
+            </a>
+        </div>
+        <div class="col-lg-6">
+            <form action="/instances" method="POST">{% csrf_token %}
+                <button class="btn-sm pull-right" type="submit" onclick="return confirm('Are you sure to reboot all instances in {{ name }} tenant?')" value="{{ id_tenant }}" name="reboot_tenant">
+                    Reboot Tenant
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="{{ id_tenant }}" class="panel-collapse collapse" role="tabpanel">
+                <div class="table-responsive">              
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr class="active">
+                            {% for i in hd %}
+                                <th>{{ i }}</th>
+                            {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for info in infos %}
+                                <tr role='row'>
+                                    {% for i in info %}
+                                    <td>{{ i }}</td>
+                                    {% endfor %}  
+                                    <td>
+                                        <form action="/instances" method="POST">{% csrf_token %}                                       
+                                            <input name="tenantid" value={{ id_tenant }} type="hidden" />
+                                            <input name="instanceid" value={{ info.1 }} type="hidden" />
+                                            {% if info.4 == 'SHUTOFF' %}
+                                            <button type="submit" class="btn-xs" title="Start" name='start'>
+                                                <span class="glyphicon glyphicon-play" />                       
+                                            </button>
+                                            <button type="submit" class="btn btn-xs disabled" title="Pause" name='pause'>
+                                                <span class="glyphicon glyphicon-pause" />                
+                                            </button>              
+                                            <button type="submit" class="btn btn-xs disabled" title="Reboot" name='reboot'>
+                                                <span class="glyphicon glyphicon-repeat" />
+                                            </button>                                  
+                                            <button type="submit" class="btn btn-xs disabled" title="Shutdown" name='shutdown'>
+                                                <span class="glyphicon glyphicon-off" />
+                                            </button>
+                                            <button type="button" class="btn-xs" title="Details" data-toggle="modal" data-target="#{{ info.1 }}">
+                                                <span class="glyphicon glyphicon-list-alt" />
+                                            </button>
+                                            {% elif info.4 == 'PAUSED' %}
+                                            <button type="submit" class="btn-xs" title="Start" name='start'>
+                                                <span class="glyphicon glyphicon-play" />                       
+                                            </button>
+                                            <button type="submit" class="btn btn-xs disabled" title="Pause" name='pause'>
+                                                <span class="glyphicon glyphicon-pause" />                
+                                            </button>              
+                                            <button type="submit" class="btn btn-xs disabled" title="Reboot" name='reboot'>
+                                                <span class="glyphicon glyphicon-repeat" />
+                                            </button>                                  
+                                            <button type="submit" class="btn btn-xs disabled" title="Shutdown" name='shutdown'>
+                                                <span class="glyphicon glyphicon-off" />
+                                            </button>
+                                            <button type="button" class="btn-xs" title="Details" data-toggle="modal" data-target="#{{ info.1 }}">
+                                                <span class="glyphicon glyphicon-list-alt" />
+                                            </button>
+                                            {% else %}
+                                            <button type="submit" class="btn btn-xs disabled" title="Start" name='start'>
+                                                <span class="glyphicon glyphicon-play" />                       
+                                            </button>
+                                            <button type="submit" class="btn-xs " title="Pause" name='pause'>
+                                                <span class="glyphicon glyphicon-pause" />                
+                                            </button>              
+                                            <button type="submit" class="btn-xs" title="Reboot" name='reboot'>
+                                                <span class="glyphicon glyphicon-repeat" />
+                                            </button>                                  
+                                            <button type="submit" class="btn-xs" title="Shutdown" name='shutdown'>
+                                                <span class="glyphicon glyphicon-off" />
+                                            </button>
+                                            <button type="button" class="btn-xs" title="Details" data-toggle="modal" data-target="#{{ info.1 }}">
+                                                <span class="glyphicon glyphicon-list-alt" />
+                                            </button>
+                                            {% endif %}
+                                        </form>
+                                    </td>
+                                </tr>
+                                <div class="modal fade" id="{{ info.1 }}" tabindex="-1" role="dialog" aria-labelledby="largeModal" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h3 class="modal-title">Instance Details: <b>{{ info.0 }}</b></h3>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h4><b>Instance Overview</b></h4>
+                                                <b>Name</b><br>
+                                                &nbsp;{{ info.0 }}</br>
+                                                <b>ID</b></br>
+                                                &nbsp;{{ info.1 }}</br>
+                                                <b>Int IP</b></br>
+                                                &nbsp;{{ info.2 }}</br>
+                                                <b>Image ID</b><br>
+                                                &nbsp;{{ info.3 }}</br>
+                                                <b>Status</b></br>
+                                                &nbsp;{{ info.4 }}</br>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <hr>
+    {% endfor %}
+        
+
+        
+{% endblock %}

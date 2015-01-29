@@ -1,0 +1,115 @@
+import os
+import authen
+import json
+import sys
+import urllib2
+from keystoneclient.v2_0 import client
+
+class colors:
+    PINK = '\033[95m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    END = '\033[0m'
+
+keystone = client.Client(username=authen.username,password=authen.password,
+                        tenant_name=authen.tenant_name, auth_url=authen.auth_url+":35357/v2.0")
+
+listTenantsName=[]
+listIdTenant = []
+tenants = keystone.tenants.list()
+for item in tenants:
+    if item.name !="service" and item.name !="invisible_to_admin" :
+        listTenantsName.append(item.name)
+        listIdTenant.append(item.id)
+
+def getlistTenantsName():
+    return listTenantsName
+
+def getlistIdTenant():
+    return listIdTenant
+
+def listTenantsFuntion():
+    listTenants=[]
+    tenants = keystone.tenants.list()
+#    print keystone.auth_ref['token']['id']
+
+    for item in tenants:
+        
+        if item.enabled:
+            a="True"
+        else:
+            a="False"
+        listTenants.append(colors.BLUE+"|"+colors.END+"Tenant name: %20s "%item.name +colors.BLUE+"|"+colors.END+"  id: "+item.id+colors.BLUE+"|"+colors.END+" Enabled:  "+a+colors.BLUE+"|"+colors.END)
+
+ 
+def getlist(url,token_xacthuc):
+    tenantRequest = urllib2.Request(url)
+    tenantRequest.add_header("X-Auth-Token",token_xacthuc)
+    request = urllib2.urlopen(tenantRequest)
+    json_data = json.loads(request.read())
+    request.close()
+    return json.dumps(json_data)
+
+
+
+
+# Ham reboot cac may ao
+def reboot(url,token_xacthuc):
+    requestReboot = urllib2.Request(url)
+    requestReboot.add_header("X-Auth-Token", token_xacthuc)
+    requestReboot.add_header("Content-type", "application/json")
+
+    jsonPayload = json.dumps({"reboot":{"type":"SOFT"}})
+    request = urllib2.urlopen(requestReboot, jsonPayload)
+
+def listServerFuntion():
+        # Khai bao danh sach thong tin cac server
+    listServers =[]
+
+        # vong lap cac phan tu trong danh sach tenant name
+    for item in listTenantsName:
+            # xac thuc 
+        keystone = client.Client(username=authen.username,password=authen.password,tenant_name=item, auth_url=authen.auth_url+":35357/v2.0")
+        token= keystone.auth_ref['token']['id']
+        tenants= keystone.tenants.list()
+        for item2 in tenants:
+            if item2.name==item:
+                idTenant=item2.id
+                listServersTenant =[]
+                listServersJson = json.loads(getlist(authen.auth_url+":8774/v2/"+idTenant+"/servers/detail",token))
+                for item in listServersJson['servers']:
+                    servers=[]
+                    servers.append(item['name'])
+                    servers.append(item['id'])
+                    servers.append(item['addresses']['int-net'][0]['addr'])
+                    servers.append(item['image']['id'])
+                    servers.append(item['status']) 
+                    listServersTenant.append(servers)
+                listServers.append(listServersTenant)
+    return listServers
+
+
+def listIdServerFuntion():
+        # Khai bao danh sach cac id server
+    listidServer=[]
+    listidServer2=[]
+        # vong lap cac phan tu trong danh sach tenant name
+    for item in listTenantsName:
+            # xac thuc 
+        keystone = client.Client(username=authen.username,password=authen.password,tenant_name=item, auth_url=authen.auth_url+":35357/v2.0")
+        token= keystone.auth_ref['token']['id']
+        tenants= keystone.tenants.list()
+        for item2 in tenants:
+            if item2.name==item:
+                servers=[]
+                idTenant=item2.id
+                listServersTenant =[]
+                listServersJson = json.loads(getlist(authen.auth_url+":8774/v2/"+idTenant+"/servers/detail",token))
+                for item in listServersJson['servers']:                                                                         
+                    servers.append(item['id'])
+                listidServer.append(servers)
+    return listidServer
+    
+

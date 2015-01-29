@@ -20,7 +20,14 @@ def home(request):
 
 
 def performance(request):
-    return render_to_response('performance.html')
+    import performance
+    import hypervisor
+    a = performance.tainguyen()
+    lst = a.split()
+    hd = ['RAM (total)', 'RAM (use)', 'Storage (total)', 'Storage (use)']
+    lst2 = hypervisor.hypervisor()
+    hd2 = ['CPU (total)','CPU (use)','RAM (total)', 'RAM (use)','Storage (total)', 'Storage (use)', 'Instances']
+    return render_to_response('performance.html',{'hd': hd, 'lst': lst, 'hd2': hd2, 'lst2': lst2})
 
 def instances(request):
     import infomations

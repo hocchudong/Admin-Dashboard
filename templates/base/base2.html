@@ -60,7 +60,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/admin/">Admin</a>
+                <a class="navbar-brand" href="admin">Admin</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -279,12 +279,12 @@
                     <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
-                                    <input type="text" class="form-control" name='q' id="id_q" placeholder="Search..."/>
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default" type="submit">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </span>
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
                             </div>
                             <!-- /input-group -->
                         </li>
@@ -292,14 +292,11 @@
                             <a href="/" class="{% block active_index %}{% endblock %}"><i class="fa fa-table fa-fw"></i> Dashboard</a>
                         </li>
                         <li>
-                            <a href="/performance/" class="{% block active_charts %}{% endblock %}"><i class="fa fa-bar-chart-o fa-fw"></i> Performance</a>
+                            <a href="performance" class="{% block active_charts %}{% endblock %}"><i class="fa fa-bar-chart-o fa-fw"></i> Performance</a>
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="/instances/" class="{% block active_instance %}{% endblock %}"><i class="fa fa-users fa-fw"></i> Instances</a>
-                        </li>
-                        <li>
-                            <a href="/containers/" class="{% block active_containers %}{% endblock %}"><i class="fa fa-inbox fa-fw"></i> Containers</a>
+                            <a href="instances" class="{% block active_instance %}{% endblock %}"><i class="fa fa-users fa-fw"></i> Instances</a>
                         </li>
                         <!--<li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>

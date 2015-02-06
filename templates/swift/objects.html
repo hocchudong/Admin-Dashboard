@@ -1,0 +1,26 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Objects
+{% endblock %}
+
+{% block active_containers %}
+    active
+{% endblock %}
+
+{% block page-header %}
+    Containers <small>Object Storage</small>
+{% endblock %}
+
+{% block dir-header %}
+    <li>
+        <i class="fa fa-inbox"></i><a href="/containers/"> Containers</a>
+    </li>
+    <li class="active">
+        <i class="fa fa-file"></i> {{ container }}
+    </li>
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

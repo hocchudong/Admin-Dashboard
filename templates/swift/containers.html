@@ -1,0 +1,90 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Containers
+{% endblock %}
+
+{% block active_containers %}
+    active
+{% endblock %}
+
+{% block page-header %}
+    Containers <small>Object Storage</small>
+{% endblock %}
+
+{% block dir-header %}
+    <li class="active">
+        <i class="fa fa-inbox"></i> Containers
+    </li>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <form action="/containers/" method="POST">{% csrf_token %}  
+                    <thead>
+                        <tr>
+                        {% for i in hd %}
+                            <th>{{ i }}</th>
+                        {% endfor %}
+                            <th style="width: 1em;">
+                                <button type="button" class="btn btn-xs btn-success" title="Create Container" data-toggle="modal" data-target="#99999999">
+                                    <span class="fa fa-plus" />                       
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in containers %}
+                            <tr role='row'>
+                                <td class="col-lg-8">
+                                    <a href="/containers/{{ i.name }}/">
+                                        {{ i.name }}
+                                    </a>
+                                </td>
+                                <td>{{ i.count }}</td>
+                                <td>{{ i.bytes|filesizeformat }}</td>
+                                <td>
+                                    <button type="submit" class="btn btn-xs btn-danger" title="Delete Container" name='del_container' value="{{ i.name }}" onclick="return confirm('Are you sure to delete {{ i.name }} container?')">
+                                        <span class="fa fa-trash" />                       
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                
+                    <div class="modal fade" id="99999999" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h3 class="modal-title">Create Container</h3>
+                                </div>
+                                <div class="modal-body"> 
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class='col-lg-8'>
+                                                <label for="1414">Container Name:</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class='col-lg-8'>
+                                                <input id='1414' class='form-control' name="con_name" value="" type="text" placeholder="..."/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success" name='create_con'>Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

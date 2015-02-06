@@ -4,7 +4,7 @@
     Instances
 {% endblock %}
 
-{% block active_instances %}
+{% block active_instance %}
     active
 {% endblock %}
 
@@ -23,23 +23,23 @@
         <div class="col-lg-6">
         </div>
         <div class="col-lg-2">
-            <form action="/instances" method="POST">{% csrf_token %}
+            <form action="/instances/" method="POST">{% csrf_token %}
                 <button class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to start all instances in system?')"  name="start_all">
-                    Start  All  Tenants
+                    Start All Instances
                 </button>
             </form>
         </div>
         <div class="col-lg-2">
-            <form action="/instances" method="POST">{% csrf_token %}
+            <form action="/instances/" method="POST">{% csrf_token %}
                 <button class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to reboot all instances in system?')" name="reboot_all">
-                    Reboot  All  Instance
+                    Reboot All Instance
                 </button>
             </form>
         </div>
         <div class="col-lg-2">
-            <form action="/instances" method="POST">{% csrf_token %}
+            <form action="/instances/" method="POST">{% csrf_token %}
                 <button class="btn-sm btn-block " type="submit" onclick="return confirm('Are you sure to shutdown all instances in system?')" name="shutdown_all">
-                    Shutdown  All  Instances
+                    Shutdown All Instances
                 </button>
             </form>
         </div>
@@ -48,12 +48,12 @@
     {% for name, infos, id_tenant in kq %}  
     <div class="row">
         <div class="col-lg-6">
-            <a data-toggle="collapse"  href="#{{ id_tenant }}">
+            <!--<a data-toggle="collapse"  href="#{{ id_tenant }}">-->
                 <h3><b>{{ name }}</b></h3>
-            </a>
+            <!--</a>-->
         </div>
         <div class="col-lg-6">
-            <form action="/instances" method="POST">{% csrf_token %}
+            <form action="/instances/" method="POST">{% csrf_token %}
                 <button class="btn-sm pull-right" type="submit" onclick="return confirm('Are you sure to reboot all instances in {{ name }} tenant?')" value="{{ id_tenant }}" name="reboot_tenant">
                     Reboot Tenant
                 </button>
@@ -62,7 +62,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div id="{{ id_tenant }}" class="panel-collapse collapse" role="tabpanel">
+            <!--<div id="{{ id_tenant }}" class="panel-collapse collapse" role="tabpanel">-->
                 <div class="table-responsive">              
                     <table class="table table-bordered table-hover">
                         <thead>
@@ -77,9 +77,9 @@
                                 <tr role='row'>
                                     {% for i in info %}
                                     <td>{{ i }}</td>
-                                    {% endfor %}  
-                                    <td>
-                                        <form action="/instances" method="POST">{% csrf_token %}                                       
+                                    {% endfor %}
+                                    <td class="col-lg-2">
+                                        <form action="/instances/" method="POST">{% csrf_token %}                                       
                                             <input name="tenantid" value={{ id_tenant }} type="hidden" />
                                             <input name="instanceid" value={{ info.1 }} type="hidden" />
                                             {% if info.4 == 'SHUTOFF' %}
@@ -164,10 +164,9 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            <!--</div>-->
         </div>
     </div>
-    <br>
     <hr>
     {% endfor %}
         

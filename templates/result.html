@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    Search
+{% endblock %}
+
+
+{% block page-header %}
+    Search
+{% endblock %}
+
+{% block content %}
+{% if found_entries %}
+   {% for field in found_entries %}
+        {{ model.field }}
+   {% endfor %}
+{% endif %}
+{% endblock %}
